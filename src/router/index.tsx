@@ -9,7 +9,7 @@ const router = createBrowserRouter([
     errorElement: <NotFound />,
     children: [
       { index: true, element: <Main /> },
-      { path: "Game", element: <Game /> },
+      { path: "game", element: <Game /> },
     ],
   },
 ]);
