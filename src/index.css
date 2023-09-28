@@ -10,3 +10,7 @@ body {
     "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
+
+#root {
+  @apply w-[1000px] mx-auto;
+}
