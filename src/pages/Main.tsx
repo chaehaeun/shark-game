@@ -2,13 +2,15 @@ import { getWord } from "@/api";
 import { Button } from "@/components";
 import { WORD_LENGTH } from "@/constants";
 import { gameState } from "@/store";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { GiSharkFin } from "react-icons/gi";
 import { useNavigate } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
 import { useRecoilState } from "recoil";
 
 const Main = () => {
   const [gameSet, setgameSet] = useRecoilState(gameState);
+  const [isLoading, setIsLoading] = useState(false);
   const selectRef = useRef<HTMLSelectElement>(null);
   const navigate = useNavigate();
 
@@ -21,7 +23,7 @@ const Main = () => {
         isGameStarted: true,
         wordLength: +selectedLength,
       });
-
+      setIsLoading(true);
       try {
         const res = await getWord(+selectedLength);
         setgameSet({
@@ -31,6 +33,8 @@ const Main = () => {
         navigate("/game");
       } catch {
         console.log("error");
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -54,7 +58,12 @@ const Main = () => {
             </option>
           ))}
         </select>
-        <Button onClick={handleClick}>게임 시작하기</Button>
+        <Button onClick={handleClick}>
+          게임 시작하기
+          {isLoading && (
+            <ClipLoader size={10} color="#ffffff" className="ml-2" />
+          )}
+        </Button>
       </div>
     </>
   );
