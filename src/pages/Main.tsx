@@ -6,10 +6,10 @@ import { useRef, useState } from "react";
 import { GiSharkFin } from "react-icons/gi";
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 
 const Main = () => {
-  const [gameSet, setgameSet] = useRecoilState(gameState);
+  const setgameSet = useSetRecoilState(gameState);
   const [isLoading, setIsLoading] = useState(false);
   const selectRef = useRef<HTMLSelectElement>(null);
   const navigate = useNavigate();
@@ -18,17 +18,13 @@ const Main = () => {
     const selectedLength = selectRef.current?.value;
 
     if (selectedLength) {
-      setgameSet({
-        ...gameSet,
-        isGameStarted: true,
-        wordLength: +selectedLength,
-      });
       setIsLoading(true);
       try {
         const res = await getWord(+selectedLength);
         setgameSet({
-          ...gameSet,
           word: res,
+          isGameStarted: true,
+          wordLength: +selectedLength,
         });
         navigate("/game");
       } catch {
