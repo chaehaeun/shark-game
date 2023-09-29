@@ -21,7 +21,7 @@ const Main = () => {
       setIsLoading(true);
       try {
         const res = await getWord(+selectedLength);
-        setgameSet(res);
+        setgameSet(res[0]);
         navigate("/game");
       } catch {
         console.log("error");
