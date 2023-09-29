@@ -29,6 +29,8 @@ const Game = () => {
   const ifCountLast = count === 1;
   const navigate = useNavigate();
 
+  console.log(gameSet);
+
   useEffect(() => {
     if (!gameSet) {
       navigate("/");
@@ -80,7 +82,7 @@ const Game = () => {
     e.preventDefault();
     if (!gameSet) return;
 
-    const guessedWord = inputRef.current?.value;
+    const guessedWord = inputRef.current?.value.toLowerCase();
 
     if (guessedWord?.trim() === gameSet) {
       endGame(true);
@@ -152,9 +154,10 @@ const Game = () => {
         </form>
       </div>
 
-      <Button mode="button" onClick={() => navigate("/")}>
-        다시 하기 (메인으로)
+      <Button mode="button" onClick={() => endGame(false)}>
+        정답 확인 후 메인으로
       </Button>
+
       {showModal && (
         <Modal
           onClose={() => navigate("/")}
