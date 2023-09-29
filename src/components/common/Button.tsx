@@ -13,7 +13,7 @@ const Button = ({ children, type, onClick, mode, isActive }: ButtonProps) => {
     mode === "letter"
       ? "w-full  aspect-square text-2xl rounded-md"
       : mode === "button"
-      ? "px-5 py-3 rounded-3xl"
+      ? "px-5 py-3 rounded-3xl block mx-auto"
       : mode === "guess"
       ? "px-3 py-2 rounded-md"
       : "";

@@ -103,10 +103,10 @@ const Game = () => {
         )}
       </ul>
 
-      <div>
+      <div className="mb-5">
         <form onSubmit={handleAnswerSubmit} className="block my-5 text-center ">
           <label htmlFor="guessedWord" className="block">
-            예상 답안(오답 시 기회가 1회 차감됩니다.)
+            예상 답안(오답 시 기회가 1회 차감)
           </label>
           <input
             className="px-3 py-2 mr-1 border border-black rounded-md"
@@ -118,9 +118,11 @@ const Game = () => {
             제출
           </Button>
         </form>
-
-        <p className="text-center text-red-500">땡! 오답입니다!</p>
       </div>
+
+      <Button mode="button" onClick={() => navigate("/")}>
+        다시 하기 (메인으로)
+      </Button>
     </>
   );
 };
