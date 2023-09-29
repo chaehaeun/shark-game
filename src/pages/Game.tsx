@@ -8,11 +8,20 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 
+interface GameState {
+  isWin: boolean;
+  isGameEnd: boolean;
+}
+
 const Game = () => {
   const [gameSet] = useRecoilState(gameState);
   const [count, setCount] = useState(COUNT);
   const [pressedLetters, setPressedLetters] = useState<string[]>([]);
   const [sharkPosition, setSharkPosition] = useState<number>(0);
+  const [game, setGame] = useState<GameState>({
+    isWin: false,
+    isGameEnd: false,
+  });
   const inputRef = useRef<HTMLInputElement>(null);
   const ifCountLast = count === 1;
   const navigate = useNavigate();
@@ -26,6 +35,13 @@ const Game = () => {
   useEffect(() => {
     const newSharkPosition = (COUNT - count) * 65;
     setSharkPosition(newSharkPosition);
+
+    if (count === 0) {
+      setGame({
+        isWin: false,
+        isGameEnd: true,
+      });
+    }
   }, [count]);
 
   const handleLetterClick = (letter: string) => {
@@ -38,9 +54,18 @@ const Game = () => {
 
   const displayWord = () => {
     if (!gameSet) return [];
-    return gameSet
+    const displayed = gameSet
       .split("")
       .map((char) => (pressedLetters.includes(char) ? char : "_"));
+
+    if (!displayed.includes("_") && !game.isGameEnd) {
+      setGame({
+        isWin: true,
+        isGameEnd: true,
+      });
+    }
+
+    return displayed;
   };
 
   const handleAnswerSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -49,8 +74,11 @@ const Game = () => {
 
     const guessedWord = inputRef.current?.value;
 
-    if (guessedWord === gameSet) {
-      console.log("정답!");
+    if (guessedWord?.trim() === gameSet) {
+      setGame({
+        isWin: true,
+        isGameEnd: true,
+      });
     } else {
       setCount((prevCount) => prevCount - 1);
     }
@@ -58,6 +86,8 @@ const Game = () => {
     inputRef.current!.value = "";
     inputRef.current!.focus();
   };
+
+  console.log(game);
 
   return (
     <>
