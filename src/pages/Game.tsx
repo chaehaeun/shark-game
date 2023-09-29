@@ -6,7 +6,7 @@ import Modal from "@/components/common/Modal";
 import { COUNT } from "@/constants";
 import useModal from "@/hooks/useModal";
 import { gameState } from "@/store";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 
@@ -35,18 +35,25 @@ const Game = () => {
     }
   }, [gameSet, navigate]);
 
+  const endGame = useCallback(
+    (isWin: boolean) => {
+      setGame({
+        isWin,
+        isGameEnd: true,
+      });
+      openModal();
+    },
+    [openModal]
+  );
+
   useEffect(() => {
     const newSharkPosition = (COUNT - count) * 65;
     setSharkPosition(newSharkPosition);
 
-    if (count === 0) {
-      setGame({
-        isWin: false,
-        isGameEnd: true,
-      });
-      openModal();
+    if (count === 0 && !game.isGameEnd) {
+      endGame(false);
     }
-  }, [count, openModal]);
+  }, [count, endGame, game.isGameEnd]);
 
   const handleLetterClick = (letter: string) => {
     setPressedLetters((prevLetters) => [...prevLetters, letter]);
@@ -63,11 +70,7 @@ const Game = () => {
       .map((char) => (pressedLetters.includes(char) ? char : "_"));
 
     if (!displayed.includes("_") && !game.isGameEnd) {
-      setGame({
-        isWin: true,
-        isGameEnd: true,
-      });
-      openModal();
+      endGame(true);
     }
 
     return displayed;
@@ -80,11 +83,7 @@ const Game = () => {
     const guessedWord = inputRef.current?.value;
 
     if (guessedWord?.trim() === gameSet) {
-      setGame({
-        isWin: true,
-        isGameEnd: true,
-      });
-      openModal();
+      endGame(true);
     } else {
       setCount((prevCount) => prevCount - 1);
     }
