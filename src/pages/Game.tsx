@@ -13,6 +13,7 @@ const Game = () => {
   const [gameSet] = useRecoilState(gameState);
   const [count, setCount] = useState(COUNT);
   const [pressedLetters, setPressedLetters] = useState<string[]>([]);
+  const [sharkPosition, setSharkPosition] = useState<number>(0);
   const ifCountLast = count === 1;
   const navigate = useNavigate();
 
@@ -22,6 +23,11 @@ const Game = () => {
     }
   }, [gameSet, navigate]);
 
+  useEffect(() => {
+    const newSharkPosition = (COUNT - count) * 65;
+    setSharkPosition(newSharkPosition);
+  }, [count]);
+
   const handleLetterClick = (letter: string) => {
     setPressedLetters((prevLetters) => [...prevLetters, letter]);
 
@@ -30,13 +36,16 @@ const Game = () => {
     }
   };
 
+  console.log(sharkPosition);
+
   return (
     <>
       <p>{gameSet}</p>
       <div className="w-[600px] h-[250px] mx-auto relative rounded-2xl overflow-hidden">
         <img className="absolute top-0 left-0 z-20" src={water} alt="water" />
         <img
-          className="absolute z-10 transition-transform left-5 top-24"
+          style={{ transform: `translateX(${sharkPosition}px)` }}
+          className={`absolute z-10 transition-transform ease-in-out left-5 top-24 `}
           src={shark}
           alt="shark"
         />
