@@ -11,9 +11,11 @@ interface ButtonProps {
 const Button = ({ children, type, onClick, mode, isActive }: ButtonProps) => {
   const styleMode =
     mode === "letter"
-      ? "w-full  aspect-square text-2xl rounded-sm"
+      ? "w-full  aspect-square text-2xl rounded-md"
       : mode === "button"
       ? "px-5 py-3 rounded-3xl"
+      : mode === "guess"
+      ? "px-3 py-2 rounded-md"
       : "";
 
   return (
