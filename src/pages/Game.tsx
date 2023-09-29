@@ -2,18 +2,18 @@ import shark from "@/assets/shark.png";
 import sky from "@/assets/sky.png";
 import water from "@/assets/water.png";
 import { Button } from "@/components";
+import { COUNT } from "@/constants";
 import { gameState } from "@/store";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-
-const COUNT = 7;
 
 const Game = () => {
   const [gameSet] = useRecoilState(gameState);
   const [count, setCount] = useState(COUNT);
   const [pressedLetters, setPressedLetters] = useState<string[]>([]);
   const [sharkPosition, setSharkPosition] = useState<number>(0);
+  const inputRef = useRef<HTMLInputElement>(null);
   const ifCountLast = count === 1;
   const navigate = useNavigate();
 
@@ -36,7 +36,28 @@ const Game = () => {
     }
   };
 
-  console.log(sharkPosition);
+  const displayWord = () => {
+    if (!gameSet) return [];
+    return gameSet
+      .split("")
+      .map((char) => (pressedLetters.includes(char) ? char : "_"));
+  };
+
+  const handleAnswerSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!gameSet) return;
+
+    const guessedWord = inputRef.current?.value;
+
+    if (guessedWord === gameSet) {
+      console.log("정답!");
+    } else {
+      setCount((prevCount) => prevCount - 1);
+    }
+
+    inputRef.current!.value = "";
+    inputRef.current!.focus();
+  };
 
   return (
     <>
@@ -50,6 +71,12 @@ const Game = () => {
           alt="shark"
         />
         <img className="absolute top-0 left-0 " src={sky} alt="sky" />
+      </div>
+
+      <div className="flex justify-center gap-4 my-5 text-4xl font-bold">
+        {displayWord().map((char, idx) => (
+          <span key={idx}>{char}</span>
+        ))}
       </div>
 
       <p className="my-5 text-xl text-center">
@@ -77,7 +104,7 @@ const Game = () => {
       </ul>
 
       <div>
-        <form className="block my-5 text-center ">
+        <form onSubmit={handleAnswerSubmit} className="block my-5 text-center ">
           <label htmlFor="guessedWord" className="block">
             예상 답안(오답 시 기회가 1회 차감됩니다.)
           </label>
@@ -85,6 +112,7 @@ const Game = () => {
             className="px-3 py-2 mr-1 border border-black rounded-md"
             id="guessedWord"
             type="text"
+            ref={inputRef}
           />
           <Button mode="guess" type="submit">
             제출
