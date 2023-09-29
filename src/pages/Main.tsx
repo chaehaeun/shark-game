@@ -14,18 +14,14 @@ const Main = () => {
   const selectRef = useRef<HTMLSelectElement>(null);
   const navigate = useNavigate();
 
-  const handleClick = async () => {
+  const handleGameSet = async () => {
     const selectedLength = selectRef.current?.value;
 
     if (selectedLength) {
       setIsLoading(true);
       try {
         const res = await getWord(+selectedLength);
-        setgameSet({
-          word: res,
-          isGameStarted: true,
-          wordLength: +selectedLength,
-        });
+        setgameSet(res);
         navigate("/game");
       } catch {
         console.log("error");
@@ -54,7 +50,7 @@ const Main = () => {
             </option>
           ))}
         </select>
-        <Button onClick={handleClick}>
+        <Button onClick={handleGameSet} mode={"button"}>
           게임 시작하기
           {isLoading && (
             <ClipLoader size={10} color="#ffffff" className="ml-2" />
