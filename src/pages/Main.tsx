@@ -23,8 +23,13 @@ const Main = () => {
         const res = await getWord(+selectedLength);
         setgameSet(res[0]);
         navigate("/game");
-      } catch {
-        console.log("error");
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
+        if (e.response.status === 503) {
+          alert("서버가 불안정합니다. 잠시 후 다시 시도해주세요.");
+        }
+
+        alert("단어를 불러오는 데 실패했습니다.");
       } finally {
         setIsLoading(false);
       }
