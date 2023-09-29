@@ -4,14 +4,24 @@ interface ButtonProps {
   children: React.ReactNode;
   type?: "button" | "submit";
   onClick?: () => void;
+  mode?: string;
+  isActive?: boolean;
 }
 
-const Button = ({ children, type, onClick }: ButtonProps) => {
+const Button = ({ children, type, onClick, mode, isActive }: ButtonProps) => {
+  const styleMode =
+    mode === "letter"
+      ? "w-full  aspect-square text-2xl rounded-sm"
+      : mode === "button"
+      ? "px-5 py-3 rounded-3xl"
+      : "";
+
   return (
     <button
       type={type || "button"}
       onClick={onClick}
-      className=" bg-blue-500 py-3 px-5 rounded-3xl text-white font-bold hover:bg-blue-700 transition-colors"
+      disabled={isActive || false}
+      className={`${styleMode} disabled:bg-slate-500 font-bold text-white transition-colors bg-blue-500  hover:bg-blue-700`}
     >
       {children}
     </button>
