@@ -2,7 +2,9 @@ import shark from "@/assets/shark.png";
 import sky from "@/assets/sky.png";
 import water from "@/assets/water.png";
 import { Button } from "@/components";
+import Modal from "@/components/common/Modal";
 import { COUNT } from "@/constants";
+import useModal from "@/hooks/useModal";
 import { gameState } from "@/store";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +24,7 @@ const Game = () => {
     isWin: false,
     isGameEnd: false,
   });
+  const { showModal, openModal } = useModal();
   const inputRef = useRef<HTMLInputElement>(null);
   const ifCountLast = count === 1;
   const navigate = useNavigate();
@@ -41,8 +44,9 @@ const Game = () => {
         isWin: false,
         isGameEnd: true,
       });
+      openModal();
     }
-  }, [count]);
+  }, [count, openModal]);
 
   const handleLetterClick = (letter: string) => {
     setPressedLetters((prevLetters) => [...prevLetters, letter]);
@@ -63,6 +67,7 @@ const Game = () => {
         isWin: true,
         isGameEnd: true,
       });
+      openModal();
     }
 
     return displayed;
@@ -79,6 +84,7 @@ const Game = () => {
         isWin: true,
         isGameEnd: true,
       });
+      openModal();
     } else {
       setCount((prevCount) => prevCount - 1);
     }
@@ -87,11 +93,8 @@ const Game = () => {
     inputRef.current!.focus();
   };
 
-  console.log(game);
-
   return (
     <>
-      <p>{gameSet}</p>
       <div className="w-[600px] h-[250px] mx-auto relative rounded-2xl overflow-hidden">
         <img className="absolute top-0 left-0 z-20" src={water} alt="water" />
         <img
@@ -153,6 +156,13 @@ const Game = () => {
       <Button mode="button" onClick={() => navigate("/")}>
         다시 하기 (메인으로)
       </Button>
+      {showModal && (
+        <Modal
+          onClose={() => navigate("/")}
+          opportunity={count}
+          isWin={game.isWin}
+        />
+      )}
     </>
   );
 };
